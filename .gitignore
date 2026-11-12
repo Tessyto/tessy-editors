@@ -1,0 +1,15 @@
+# PyInstaller / build
+build/
+dist/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.log
+*.tmp
+
+# Editores
+.vs/
+.idea/
+.vscode/
