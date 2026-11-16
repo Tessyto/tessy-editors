@@ -85,6 +85,11 @@ Los ejecutables quedan en `dist/`.
 - **Ui integrados:** QImage/QPainter de Qt para el renderizado de texturas y skins.
 - **APIs de Mojang**: el editor de skins usa el servicio público de perfiles de Mojang (`sessionserver.mojang.com`) y `api.minecraftservices.com`, y como respaldo `api.playerdb.co` (archivador comunitario). Estas APIs son propiedad de Mojang/Microsoft y se usan conforme a sus políticas de uso público.
 
+## Tienda
+
+Puedes conseguir los ejecutables de ambos editores aqui: https://tessyowo.itch.io/
+Get the executables from both editors here: https://tessyowo.itch.io/
+
 ## Licencia
 
 **GPLv3** por dependencia de PyQt6. Puedes usar, modificar y distribuir libremente este software, siempre que los derivados incluyan su código fuente bajo la misma licencia.
