@@ -20,7 +20,7 @@ def resource_path(relative_path):
     return os.path.join(base_path, relative_path)
 
 
-APP_VERSION = "0.0.1"
+APP_VERSION = "2.0.0"
 
 # --- i18n ---
 LANG = "es"
@@ -33,17 +33,22 @@ I18N = {
         "fit_tip": "Ajustar a la ventana (Ctrl+0)",
         "mode_group": "Modo de edición",
         "mode_block": "Bloque", "mode_free": "Libre",
+        "mode_foliage": "Follaje", "mode_particle": "Partículas",
         "tools_group": "Herramientas",
         "tool_select": "➤ Seleccionar", "tool_pencil": "✎ Lápiz", "tool_eraser": "⌫ Borrador",
         "tool_bucket": "▣ Cubeta", "tool_picker": "⌖ Gotero", "tool_replace": "↹ Reemplazar",
         "tool_line": "／ Línea", "tool_rect": "▭ Rectángulo",
+        "brushes_group": "Pinceles",
+        "brush_shape": "Forma:", "brush_size": "Tamaño:", "brush_strength": "Intensidad:",
+        "brush_dot": "• Punto", "brush_square": "▦ Cuadrado", "brush_circle": "● Círculo",
+        "brush_spray": "✳ Aerosol", "brush_soft": "◌ Suave",
         "symmetry": "Simetría:",
         "sym_none": "Ninguna", "sym_h": "Horizontal ↔", "sym_v": "Vertical ↕", "sym_both": "Ambas ✛",
         "color_group": "Color y Opacidad", "alpha": "Alfa (Opacidad)",
         "variation": "Variación de tono (ruido)",
         "variation_tip": "Cada píxel pintado cambia un poco de brillo. 0 = color plano.",
         "pick_color": "Seleccionar Color",
-        "template_group": "Plantilla de bloque",
+        "template_group": "Plantilla",
         "template_lbl": "Plantilla:", "tile_size_lbl": "Resolución por cara:",
         "atlas_info": "Lienzo: {w}×{h} px · {n} cara(s)",
         "tpl_single": "Bloque simple (1 textura)",
@@ -54,6 +59,17 @@ I18N = {
         "tpl_cross": "Cruz desplegada (6 caras)",
         "tpl_atlas2": "Atlas libre 2×2",
         "tpl_atlas4": "Atlas libre 4×4",
+        "tpl_plant": "Planta / flor (16×32)",
+        "tpl_plant_cross": "Planta en cruz (2 planos)",
+        "tpl_plant_tall": "Planta alta (16×64)",
+        "tpl_particle": "Partícula (1 sprite)",
+        "tpl_particle_sheet": "Hoja de animación 4×4",
+        "anim_group": "Animación", "anim_play": "▶ Reproducir", "anim_pause": "⏸ Pausa",
+        "anim_fps": "FPS:", "anim_frame": "Fotograma",
+        "export_sprite": "💾 Exportar sprite / hoja PNG",
+        "preset_group": "Preset inicial", "preset_lbl": "Generar:", "preset_apply": "Aplicar",
+        "preset_grass": "Pasto", "preset_flower_red": "Flor roja", "preset_flower_yellow": "Flor amarilla",
+        "preset_rain": "Lluvia", "preset_snow": "Nieve", "preset_firefly": "Luciérnaga",
         "zones_group": "Caras activas (desmarcar = bloquear)",
         "tile_all": "Todas las caras", "tile_top": "Superior", "tile_bottom": "Inferior",
         "tile_front": "Frontal", "tile_back": "Trasera", "tile_right": "Derecha",
@@ -124,8 +140,9 @@ I18N = {
         "new_item_name": "Nombre del item (ej: mi_espada):",
         "new_item_size": "Tamaño:",
         "item_pending": "Nombre de la próxima imagen: {name}.png",
-        "about_title": "Acerca de Tessy's Texture Editor",
-        "about_text": "Tessy's Texture Editor v{version}\nEditor de texturas pensado para fans de Minecraft (bloques y texturas libres).\nHerramienta hecha por fans; NO es un producto oficial de Mojang.\n\n\"Minecraft\" es una marca de Mojang Synergies AB / Microsoft. Este programa NO está afiliado a ni respaldado por Mojang o Microsoft.\n\nAtajos:\n  V/P/E/G/I/C/L/R  Herramientas (Seleccionar, Lápiz, Borrador, Cubeta, Gotero, Reemplazar, Línea, Rectángulo)\n  Ctrl+S  Guardar · Ctrl+O  Abrir · Ctrl+0  Ajustar a la ventana\n  Ctrl+Z  Deshacer · Ctrl+Y / Ctrl+Shift+Z  Rehacer · Ctrl+G  Cuadrícula\n  Ctrl+Shift+C  Copiar imagen al portapapeles\n\nHecho con PyQt6 · Recuperación automática ante cierres inesperados.\nHerramienta de fans · no oficial (Mojang Usage Guidelines).",
+        "sprite_exported": "Sprite exportado: {path}",
+        "about_title": "Acerca de Tessy's Texture Editor V2",
+        "about_text": "Tessy's Texture Editor V2 (v{version})\nEditor de texturas para bloques, follaje, partículas y lienzo libre.\n\nAtajos:\n  V/P/E/G/I/C/L/R  Herramientas (Seleccionar, Lápiz, Borrador, Cubeta, Gotero, Reemplazar, Línea, Rectángulo)\n  Ctrl+S  Guardar · Ctrl+O  Abrir · Ctrl+0  Ajustar a la ventana\n  Ctrl+Z  Deshacer · Ctrl+Y / Ctrl+Shift+Z  Rehacer · Ctrl+G  Cuadrícula\n  Ctrl+Shift+C  Copiar imagen al portapapeles\n\nHecho con PyQt6 · Recuperación automática ante cierres inesperados.",
     },
     "en": {
         "undo": "↩ Undo", "redo": "↪ Redo",
@@ -135,17 +152,22 @@ I18N = {
         "fit_tip": "Fit to window (Ctrl+0)",
         "mode_group": "Edit mode",
         "mode_block": "Block", "mode_free": "Free",
+        "mode_foliage": "Foliage", "mode_particle": "Particles",
         "tools_group": "Tools",
         "tool_select": "➤ Select", "tool_pencil": "✎ Pencil", "tool_eraser": "⌫ Eraser",
         "tool_bucket": "▣ Fill", "tool_picker": "⌖ Picker", "tool_replace": "↹ Replace",
         "tool_line": "／ Line", "tool_rect": "▭ Rectangle",
+        "brushes_group": "Brushes",
+        "brush_shape": "Shape:", "brush_size": "Size:", "brush_strength": "Strength:",
+        "brush_dot": "• Dot", "brush_square": "▦ Square", "brush_circle": "● Circle",
+        "brush_spray": "✳ Spray", "brush_soft": "◌ Soft",
         "symmetry": "Symmetry:",
         "sym_none": "None", "sym_h": "Horizontal ↔", "sym_v": "Vertical ↕", "sym_both": "Both ✛",
         "color_group": "Color & Opacity", "alpha": "Alpha (Opacity)",
         "variation": "Tone variation (noise)",
         "variation_tip": "Each painted pixel gets a slightly different brightness. 0 = flat color.",
         "pick_color": "Select Color",
-        "template_group": "Block template",
+        "template_group": "Template",
         "template_lbl": "Template:", "tile_size_lbl": "Resolution per face:",
         "atlas_info": "Canvas: {w}×{h} px · {n} face(s)",
         "tpl_single": "Single block (1 texture)",
@@ -156,6 +178,17 @@ I18N = {
         "tpl_cross": "Unfolded cross (6 faces)",
         "tpl_atlas2": "Free atlas 2×2",
         "tpl_atlas4": "Free atlas 4×4",
+        "tpl_plant": "Plant / flower (16×32)",
+        "tpl_plant_cross": "Crossed plant (2 planes)",
+        "tpl_plant_tall": "Tall plant (16×64)",
+        "tpl_particle": "Particle (1 sprite)",
+        "tpl_particle_sheet": "Animation sheet 4×4",
+        "anim_group": "Animation", "anim_play": "▶ Play", "anim_pause": "⏸ Pause",
+        "anim_fps": "FPS:", "anim_frame": "Frame",
+        "export_sprite": "💾 Export sprite / sheet PNG",
+        "preset_group": "Starter preset", "preset_lbl": "Generate:", "preset_apply": "Apply",
+        "preset_grass": "Grass", "preset_flower_red": "Red flower", "preset_flower_yellow": "Yellow flower",
+        "preset_rain": "Rain", "preset_snow": "Snow", "preset_firefly": "Firefly",
         "zones_group": "Active faces (uncheck = lock)",
         "tile_all": "All faces", "tile_top": "Top", "tile_bottom": "Bottom",
         "tile_front": "Front", "tile_back": "Back", "tile_right": "Right",
@@ -226,8 +259,9 @@ I18N = {
         "new_item_name": "Item name (e.g. my_sword):",
         "new_item_size": "Size:",
         "item_pending": "Next save will use: {name}.png",
-        "about_title": "About Tessy's Texture Editor",
-        "about_text": "Tessy's Texture Editor v{version}\nTexture editor built for Minecraft fans (block and freeform textures).\nFan-made tool; NOT an official Mojang product.\n\n\"Minecraft\" is a trademark of Mojang Synergies AB / Microsoft. This program is NOT affiliated with or endorsed by Mojang or Microsoft.\n\nShortcuts:\n  V/P/E/G/I/C/L/R  Tools (Select, Pencil, Eraser, Fill, Picker, Replace, Line, Rectangle)\n  Ctrl+S  Save · Ctrl+O  Open · Ctrl+0  Fit to window\n  Ctrl+Z  Undo · Ctrl+Y / Ctrl+Shift+Z  Redo · Ctrl+G  Grid\n  Ctrl+Shift+C  Copy image to clipboard\n\nMade with PyQt6 · Automatic crash recovery.\nFan tool · not official (Mojang Usage Guidelines).",
+        "sprite_exported": "Sprite exported: {path}",
+        "about_title": "About Tessy's Texture Editor V2",
+        "about_text": "Tessy's Texture Editor V2 (v{version})\nTexture editor for blocks, foliage, particles and freeform canvas.\n\nShortcuts:\n  V/P/E/G/I/C/L/R  Tools (Select, Pencil, Eraser, Fill, Picker, Replace, Line, Rectangle)\n  Ctrl+S  Save · Ctrl+O  Open · Ctrl+0  Fit to window\n  Ctrl+Z  Undo · Ctrl+Y / Ctrl+Shift+Z  Redo · Ctrl+G  Grid\n  Ctrl+Shift+C  Copy image to clipboard\n\nMade with PyQt6 · Automatic crash recovery.",
     },
 }
 
@@ -279,6 +313,14 @@ TEMPLATES = {
               "faces": _faces(*FACE_NAMES)},
     "atlas2": {"cols": 2, "rows": 2, "tiles": _atlas(2), "faces": None},
     "atlas4": {"cols": 4, "rows": 4, "tiles": _atlas(4), "faces": None},
+    # --- follaje (tiles altos, transparencia) ---
+    "plant": {"cols": 1, "rows": 1, "tile_h": 2, "tiles": [("all", 0, 0)], "faces": None},
+    "plant_cross": {"cols": 2, "rows": 1, "tile_h": 2,
+                    "tiles": [("front", 0, 0), ("side", 1, 0)], "faces": None},
+    "plant_tall": {"cols": 1, "rows": 1, "tile_h": 4, "tiles": [("all", 0, 0)], "faces": None},
+    # --- particulas (sprites pequeños / hoja de animacion) ---
+    "particle": {"cols": 1, "rows": 1, "tiles": [("all", 0, 0)], "faces": None},
+    "particle_sheet": {"cols": 4, "rows": 4, "tiles": _atlas(4), "faces": None},
 }
 TEMPLATE_ORDER = list(TEMPLATES)
 
@@ -321,20 +363,21 @@ class TexLayout:
         self.key, self.tile = key, int(tile)
         tpl = TEMPLATES[key]
         self.cols, self.rows = tpl["cols"], tpl["rows"]
+        self.tileH = tpl.get("tile_h", 1) * self.tile   # altura real del tile (plantas 16x32)
         self.faces = tpl["faces"]
         self.order = [t[0] for t in tpl["tiles"]]
         self.pos = {k: (c, r) for k, c, r in tpl["tiles"]}
         self.cell = {(c, r): k for k, c, r in tpl["tiles"]}
-        self.w, self.h = self.cols * self.tile, self.rows * self.tile
+        self.w, self.h = self.cols * self.tile, self.rows * self.tileH
 
     def rect(self, key):
         c, r = self.pos[key]
-        return QRect(c * self.tile, r * self.tile, self.tile, self.tile)
+        return QRect(c * self.tile, r * self.tileH, self.tile, self.tileH)
 
     def key_at(self, x, y):
         if not (0 <= x < self.w and 0 <= y < self.h):
             return None
-        return self.cell.get((x // self.tile, y // self.tile))
+        return self.cell.get((x // self.tile, y // self.tileH))
 
     def face_tile(self, face, active):
         return self.faces[face] if self.faces else active
@@ -399,9 +442,10 @@ def convert_image(old_img, old, new):
 def guess_layout(w, h, current_key):
     for k in [current_key] + [t for t in TEMPLATE_ORDER if t != current_key]:
         t = TEMPLATES[k]
-        if w % t["cols"] == 0 and h % t["rows"] == 0:
+        th = t.get("tile_h", 1)
+        if w % t["cols"] == 0 and h % (t["rows"] * th) == 0:
             ts = w // t["cols"]
-            if ts == h // t["rows"] and ts in TILE_SIZES:
+            if ts == h // (t["rows"] * th) and ts in TILE_SIZES:
                 return k, ts
     return None
 
@@ -1297,7 +1341,7 @@ class TextureEditor(QMainWindow):
         saved = str(self.settings.value("lang", ""))
         set_language(saved if saved in I18N else system_language())
 
-        self.setWindowTitle("Tessy's Texture Editor")
+        self.setWindowTitle("Tessy's Texture Editor V2")
         self.setMinimumSize(1150, 700)
         geo = QApplication.primaryScreen().availableGeometry()
         self.resize(min(1500, geo.width() - 40), min(900, geo.height() - 60))
@@ -1449,7 +1493,7 @@ class TextureEditor(QMainWindow):
 
         mode_group, mode_layout = self.make_group("mode_group", QHBoxLayout)
         self.mode_buttons = {}
-        for m in ("block", "free"):
+        for m in ("block", "foliage", "particle", "free"):
             b = QPushButton()
             b.setCheckable(True)
             b.clicked.connect(lambda checked, mm=m: self.set_mode(mm))
@@ -1480,6 +1524,40 @@ class TextureEditor(QMainWindow):
         tools_layout.addWidget(self.sym_combo, row + 1, 0, 1, 2)
         self._retr_hooks.append(self.refresh_combo_texts)
         left_layout.addWidget(tools_group)
+
+        # --- pinceles ---
+        brushes_group, brushes_layout = self.make_group("brushes_group", QGridLayout)
+        shape_lbl = QLabel()
+        self.bind(shape_lbl.setText, "brush_shape")
+        brushes_layout.addWidget(shape_lbl, 0, 0)
+        self.brush_combo = GuardedComboBox()
+        for key in ("brush_dot", "brush_square", "brush_circle", "brush_spray", "brush_soft"):
+            self.brush_combo.addItem(key, key)   # data = clave de i18n
+        self._retr_hooks.append(self.refresh_brush_texts)
+        brushes_layout.addWidget(self.brush_combo, 0, 1)
+        size_lbl = QLabel()
+        self.bind(size_lbl.setText, "brush_size")
+        brushes_layout.addWidget(size_lbl, 1, 0)
+        self.brush_size = QSlider(Qt.Orientation.Horizontal)
+        self.brush_size.setRange(1, 8)
+        self.brush_size.setValue(1)
+        self.brush_size_value = QLabel("1")
+        self.brush_size_value.setMinimumWidth(20)
+        self.brush_size.valueChanged.connect(lambda v: self.brush_size_value.setText(str(v)))
+        brushes_layout.addWidget(self.brush_size, 1, 1)
+        brushes_layout.addWidget(self.brush_size_value, 1, 2)
+        strength_lbl = QLabel()
+        self.bind(strength_lbl.setText, "brush_strength")
+        brushes_layout.addWidget(strength_lbl, 2, 0)
+        self.brush_strength = QSlider(Qt.Orientation.Horizontal)
+        self.brush_strength.setRange(5, 100)
+        self.brush_strength.setValue(100)
+        self.brush_strength_value = QLabel("100%")
+        self.brush_strength_value.setMinimumWidth(38)
+        self.brush_strength.valueChanged.connect(lambda v: self.brush_strength_value.setText(f"{v}%"))
+        brushes_layout.addWidget(self.brush_strength, 2, 1)
+        brushes_layout.addWidget(self.brush_strength_value, 2, 2)
+        left_layout.addWidget(brushes_group)
 
         color_group, color_layout = self.make_group("color_group")
         crow = QHBoxLayout()
@@ -1639,7 +1717,51 @@ class TextureEditor(QMainWindow):
         file_layout.addWidget(self.btn_export, 2, 0, 1, 2)
         file_layout.addWidget(self.make_button("new_texture", self.new_texture), 3, 0, 1, 2)
         file_layout.addWidget(self.make_button("new_item", self.new_item), 4, 0, 1, 2)
+        self.btn_export_sprite = self.make_button("export_sprite", self.export_sprite)
+        file_layout.addWidget(self.btn_export_sprite, 6, 0, 1, 2)
         left_layout.addWidget(file_group)
+
+        # --- animacion de particulas ---
+        self.anim_group, anim_layout = self.make_group("anim_group", QGridLayout)
+        self.anim_btn = QPushButton()
+        self.bind(self.anim_btn.setText, "anim_play")
+        self.anim_btn.clicked.connect(self.toggle_animation)
+        anim_layout.addWidget(self.anim_btn, 0, 0, 1, 2)
+        fl = QLabel(); self.bind(fl.setText, "anim_fps")
+        anim_layout.addWidget(fl, 1, 0)
+        self.anim_fps = QSlider(Qt.Orientation.Horizontal)
+        self.anim_fps.setRange(1, 30)
+        self.anim_fps.setValue(8)
+        self.anim_fps.valueChanged.connect(self.on_anim_fps)
+        anim_layout.addWidget(self.anim_fps, 1, 1)
+        self.anim_label = QLabel()
+        self.bind(self.anim_label.setText, "anim_frame")
+        anim_layout.addWidget(self.anim_label, 2, 0, 1, 2)
+        self.anim_preview = QLabel()
+        self.anim_preview.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.anim_preview.setMinimumHeight(96)
+        anim_layout.addWidget(self.anim_preview, 3, 0, 1, 2)
+        left_layout.addWidget(self.anim_group)
+
+        # --- presets iniciales ---
+        self.preset_group, preset_layout = self.make_group("preset_group", QGridLayout)
+        pl = QLabel(); self.bind(pl.setText, "preset_lbl")
+        preset_layout.addWidget(pl, 0, 0)
+        self.preset_combo = GuardedComboBox()
+        for k in ("preset_grass", "preset_flower_red", "preset_flower_yellow",
+                  "preset_rain", "preset_snow", "preset_firefly"):
+            self.preset_combo.addItem("", k)
+        self._retr_hooks.append(self.refresh_preset_texts)
+        preset_layout.addWidget(self.preset_combo, 0, 1)
+        pb = QPushButton(); self.bind(pb.setText, "preset_apply")
+        pb.clicked.connect(self.apply_preset)
+        preset_layout.addWidget(pb, 1, 0, 1, 2)
+        left_layout.addWidget(self.preset_group)
+
+        self.anim_timer = QTimer(self)
+        self.anim_timer.timeout.connect(self.next_anim_frame)
+        self.anim_frame = 0
+        self.anim_playing = False
         left_layout.addStretch()
 
         left_scroll = QScrollArea()
@@ -1819,6 +1941,13 @@ class TextureEditor(QMainWindow):
             self.lay = TexLayout(key, ts)
             if self.active not in self.lay.pos:
                 self.active = self.lay.order[0]
+        elif mode in ("foliage", "particle"):
+            default = "plant" if mode == "foliage" else "particle"
+            ts = self.lay.tile if self.lay.tile > 0 else DEFAULT_TILE
+            self.lay = TexLayout(default, ts)
+            self.image = new_image(self.lay)     # las plantas/particulas empiezan transparentes
+            self.active = self.lay.order[0]
+            self.anim_frame = 0
         else:
             self.lay = FreeLayout(self.image.width(), self.image.height())
 
@@ -1833,24 +1962,40 @@ class TextureEditor(QMainWindow):
 
     def update_mode_visibility(self):
         is_block = self.mode == "block"
+        is_sprite = self.mode in ("foliage", "particle")
 
-        self.tpl_group.setVisible(is_block)
+        self.tpl_group.setVisible(is_block or is_sprite)
         self.zones_group.setVisible(is_block and 2 <= len(self.lay.order) <= 6)
-        # El preview 3D y el mosaico 3×3 están disponibles en ambos modos.
-        self.viewer_group.setVisible(True)
+        # El cubo 3D solo tiene sentido para bloques; para sprites se ve la animacion.
+        self.viewer_group.setVisible(is_block or self.mode == "free")
         self.preview_group.setVisible(True)
-        self.block_viewer_controls.setVisible(True)
+        self.block_viewer_controls.setVisible(is_block)
         self.btn_export.setVisible(is_block)
+        self.btn_export_sprite.setVisible(is_sprite or self.mode == "free")
+        self.anim_group.setVisible(self.mode == "particle")
+        self.preset_group.setVisible(is_sprite)
+        if self.mode != "particle" and self.anim_playing:
+            self.toggle_animation()
         self.subdiv_combo.setEnabled(is_block)
 
     # sincronización
     def refresh_combo_texts(self):
         for i, k in enumerate(TEMPLATE_ORDER):
             self.tpl_combo.setItemText(i, T("tpl_" + k))
+        self.refresh_preset_texts()
         for i, key in enumerate(("sym_none", "sym_h", "sym_v", "sym_both")):
             self.sym_combo.setItemText(i, T(key))
         for i, v in enumerate((1, 2, 4, 8)):
             self.subdiv_combo.setItemText(i, T("subdiv_none") if v == 1 else f"{v} × {v}")
+        self.refresh_brush_texts()
+
+    def refresh_brush_texts(self):
+        for i in range(self.brush_combo.count()):
+            self.brush_combo.setItemText(i, T(self.brush_combo.itemData(i)))
+
+    def refresh_preset_texts(self):
+        for i in range(self.preset_combo.count()):
+            self.preset_combo.setItemText(i, T(self.preset_combo.itemData(i)))
 
     def sync_controls(self):
         if self.lay.tile > 0:
@@ -1918,12 +2063,15 @@ class TextureEditor(QMainWindow):
 
     def on_template_changed(self, index):
         key = self.tpl_combo.itemData(index)
-        if self.mode == "block" and key != self.lay.key:
+        if self.mode in ("block", "foliage", "particle") and key != self.lay.key:
             self.change_layout(key, self.lay.tile)
+            if self.mode == "particle":
+                self.anim_frame = 0
+                self.update_anim_preview()
 
     def on_tile_size_changed(self, index):
         size = self.tile_combo.itemData(index)
-        if self.mode != "block" or size == self.lay.tile:
+        if self.mode not in ("block", "foliage", "particle") or size == self.lay.tile:
             return
         if size < self.lay.tile:
             ans = QMessageBox.question(
@@ -1954,6 +2102,93 @@ class TextureEditor(QMainWindow):
     def refresh_all(self):
         self.canvas.update()
         self.refresh_side()
+        if hasattr(self, "anim_preview") and self.anim_group.isVisible():
+            self.update_anim_preview()
+
+    # --- animacion / sprites ---
+    def update_anim_preview(self):
+        if not hasattr(self, "lay") or self.lay is None:
+            return
+        n = len(self.lay.order)
+        if n < 1:
+            return
+        self.anim_frame %= n
+        key = self.lay.order[self.anim_frame]
+        rect = self.lay.rect(key)
+        frame = extract_texture(self.image, rect)
+        scale = max(1, min(6, 96 // max(1, frame.height())))
+        frame = frame.scaled(frame.width()*scale, frame.height()*scale,
+                             Qt.AspectRatioMode.KeepAspectRatio,
+                             Qt.TransformationMode.FastTransformation)
+        self.anim_preview.setPixmap(QPixmap.fromImage(frame))
+        self.anim_label.setText(f"{T('anim_frame')} {self.anim_frame+1}/{n} · {key}")
+
+    def toggle_animation(self):
+        self.anim_playing = not self.anim_playing
+        if self.anim_playing:
+            self.anim_timer.start(int(1000.0 / self.anim_fps.value()))
+            self.anim_btn.setText(T("anim_pause"))
+        else:
+            self.anim_timer.stop()
+            self.anim_btn.setText(T("anim_play"))
+
+    def next_anim_frame(self):
+        self.anim_frame = (self.anim_frame + 1) % max(1, len(self.lay.order))
+        self.update_anim_preview()
+
+    def on_anim_fps(self, v):
+        if self.anim_playing:
+            self.anim_timer.start(int(1000.0 / max(1, v)))
+
+    def export_sprite(self):
+        path, _ = QFileDialog.getSaveFileName(self, T("export_sprite"), "sprite.png", T("png_filter"))
+        if not path:
+            return
+        if not path.lower().endswith(".png"):
+            path += ".png"
+        if not self.image.save(path, "PNG"):
+            QMessageBox.critical(self, T("error"), T("save_failed"))
+            return
+        self.statusBar().showMessage(T("sprite_exported", path=path), 6000)
+
+    def apply_preset(self):
+        kind = self.preset_combo.currentData().replace("preset_", "")
+        rect = self.lay.rect(self.active)
+        rnd = random.Random(1337)
+        for yy in range(rect.top(), rect.bottom() + 1):
+            for xx in range(rect.left(), rect.right() + 1):
+                u = (xx - rect.left()) / max(1, rect.width() - 1)
+                v = (yy - rect.top()) / max(1, rect.height() - 1)
+                col = QColor(0, 0, 0, 0)
+                if kind == "grass":
+                    for blade in range(4):
+                        bx = 0.12 + blade * 0.23 + rnd.uniform(-0.04, 0.04)
+                        tip = 0.30 + rnd.uniform(0.0, 0.45)
+                        if abs(u - bx) < 0.10 and v > 1.0 - tip:
+                            g = int(120 + v * 90 + rnd.uniform(-12, 12))
+                            col = QColor(int(30 + v*30), min(255, g), 30, 255)
+                elif kind in ("flower_red", "flower_yellow"):
+                    if abs(u - 0.5) < 0.07 and v > 0.35:
+                        col = QColor(40, 130, 45, 255)
+                    if 0.15 < v < 0.38 and abs(u - 0.5) < 0.20:
+                        petal = (196, 42, 48) if kind == "flower_red" else (238, 200, 40)
+                        col = QColor(petal[0], petal[1], petal[2], 255)
+                        if abs(u - 0.5) < 0.06:
+                            col = QColor(255, 226, 70, 255)
+                elif kind == "rain":
+                    if abs(u - 0.5) < 0.18 and 0.1 < v < 0.95:
+                        col = QColor(150, 205, 255, int(210 * (1.0 - abs(u - 0.5) / 0.18)))
+                elif kind == "snow":
+                    d = ((u-0.5)**2 + (v-0.45)**2) ** 0.5
+                    if d < 0.24:
+                        col = QColor(248, 252, 255, int(255 * (1.0 - d / 0.24)))
+                elif kind == "firefly":
+                    d = ((u-0.5)**2 + (v-0.5)**2) ** 0.5
+                    if d < 0.35:
+                        col = QColor(240, 255, 120, int(235 * (1.0 - d / 0.35) ** 1.6))
+                self.image.setPixelColor(xx, yy, col)
+        self.refresh_all()
+        self.mark_dirty()
 
     def toggle_grid(self, state):
         self.canvas.show_grid = state
@@ -2069,7 +2304,7 @@ class TextureEditor(QMainWindow):
             self.mode = mode
             for m, b in self.mode_buttons.items():
                 b.setChecked(m == mode)
-        if mode == "block":
+        if mode in ("block", "foliage", "particle"):
             if (key, tile) != (self.lay.key, self.lay.tile):
                 self.set_layout(TexLayout(key, tile))
         else:
@@ -2303,11 +2538,36 @@ class TextureEditor(QMainWindow):
             self.replace_color(x, y, is_erase)
             return
         for px, py in self.symmetric_points(x, y):
-            if is_erase or self.tool == "eraser":
-                self.image.setPixelColor(px, py, Qt.GlobalColor.transparent)
-            else:
-                self.image.setPixelColor(px, py, self.paint_color())
+            self.paint_brush(px, py, is_erase or self.tool == "eraser")
         self.refresh_side()
+
+    def paint_brush(self, cx, cy, is_erase):
+        shape = self.brush_combo.currentData()
+        size = self.brush_size.value()
+        strength = self.brush_strength.value() / 100.0
+        R = size - 1
+        base = self.paint_color()
+        for dy in range(-R, R + 1):
+            for dx in range(-R, R + 1):
+                if shape == "brush_circle" and dx*dx + dy*dy > R*R + R:
+                    continue
+                if shape == "brush_spray" and random.random() > 0.35 * strength:
+                    continue
+                px, py = cx + dx, cy + dy
+                if not self.can_edit(px, py):
+                    continue
+                if is_erase:
+                    self.image.setPixelColor(px, py, Qt.GlobalColor.transparent)
+                elif shape == "brush_soft":
+                    old = self.image.pixelColor(px, py)
+                    a = strength
+                    c = QColor(int(old.red()*(1-a) + base.red()*a),
+                               int(old.green()*(1-a) + base.green()*a),
+                               int(old.blue()*(1-a) + base.blue()*a),
+                               int(old.alpha()*(1-a) + base.alpha()*a))
+                    self.image.setPixelColor(px, py, c)
+                else:
+                    self.image.setPixelColor(px, py, base)
 
     def flood_fill(self, x, y, is_erase):
         key = self.lay.key_at(x, y)
@@ -2543,6 +2803,9 @@ class TextureEditor(QMainWindow):
                 "color": self.color.name(),
                 "alpha": self.alpha_slider.value(),
                 "tool": self.tool,
+                "brush": self.brush_combo.currentData(),
+                "brush_size": self.brush_size.value(),
+                "brush_strength": self.brush_strength.value(),
             }
             with open(tmp_meta, "w", encoding="utf-8") as fh:
                 json.dump(data, fh)
@@ -2564,7 +2827,7 @@ class TextureEditor(QMainWindow):
             if img.isNull():
                 raise ValueError("recovery inválido")
             mode = data.get("mode", "block")
-            if mode == "block":
+            if mode in ("block", "foliage", "particle"):
                 key = data.get("tpl"); tile = int(data.get("tile", 0))
                 if key not in TEMPLATES or tile not in TILE_SIZES:
                     raise ValueError("recovery inválido")
@@ -2603,6 +2866,13 @@ class TextureEditor(QMainWindow):
         self.alpha_slider.setValue(int(data.get("alpha", 255)))
         if data.get("tool") in self.tool_buttons:
             self.set_tool(data["tool"])
+        brush = data.get("brush")
+        if brush:
+            i = self.brush_combo.findData(brush)
+            if i >= 0:
+                self.brush_combo.setCurrentIndex(i)
+        self.brush_size.setValue(int(data.get("brush_size", 1)))
+        self.brush_strength.setValue(int(data.get("brush_strength", 100)))
 
         self.dirty = True
         self.refresh_all()
