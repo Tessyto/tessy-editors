@@ -10,9 +10,6 @@ English and Spanish included (picks your OS language automatically).
 
 **These programs are fan-made tools. They are NOT official Mojang/Microsoft products.**
 
-"Minecraft" es una marca de Mojang Synergies AB / Microsoft.
-"Minecraft" is a trademark of Mojang Synergies AB / Microsoft.
-
 ## Tessy's Texture Editor
 
 - Editor de texturas para fans de Minecraft (bloques, items y texturas libres).
@@ -95,6 +92,3 @@ Get the executables from both editors here: https://tessyowo.itch.io/
 **GPLv3** por dependencia de PyQt6. Puedes usar, modificar y distribuir libremente este software, siempre que los derivados incluyan su código fuente bajo la misma licencia.
 
 **GPLv3** as required by PyQt6. You may use, modify and redistribute this software freely, provided derived works ship their source under the same license.
-
-"Minecraft" is a trademark of Mojang Synergies AB / Microsoft.
-This software is **not** an official Mojang/Microsoft product.
