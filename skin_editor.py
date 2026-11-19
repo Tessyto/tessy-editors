@@ -1,16 +1,29 @@
 """Tessy's Skin Editor
-Editor de skins para modelos Steve, Alex y Slim.
 Uso: python skin_editor.py
 """
 import sys
 import os
 import math
 import json
+import random
 import urllib.request
 import urllib.parse
 from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
+
+def scale_color(c, factor):
+    """Escala brillo de un QColor manteniendo el alpha."""
+    return QColor(min(255, int(c.red() * factor)),
+                  min(255, int(c.green() * factor)),
+                  min(255, int(c.blue() * factor)),
+                  c.alpha())
+
+def vary_color(c, amount):
+    """Variacion de tono aleatoria (porcentaje). 0 = sin cambio."""
+    if amount <= 0:
+        return QColor(c)
+    return scale_color(c, 1 + random.uniform(-amount, amount) / 100.0)
 
 def resource_path(relative_path):
     try:
@@ -105,6 +118,12 @@ I18N = {
         "fit_tip": "Ajustar a la ventana (Ctrl+0)",
         # herramientas
         "tools_group": "Herramientas",
+        "brushes_group": "Pinceles",
+        "brush_shape": "Forma:", "brush_size": "Tamaño:", "brush_strength": "Intensidad:",
+        "brush_dot": "• Punto", "brush_square": "▦ Cuadrado", "brush_circle": "● Círculo",
+        "brush_spray": "✳ Aerosol", "brush_soft": "◌ Suave",
+        "variation": "Variación de tono (ruido)",
+        "variation_tip": "Cada píxel pintado cambia un poco de brillo. 0 = color plano.",
         "tool_pencil": "✎ Lápiz", "tool_eraser": "⌫ Borrador", "tool_bucket": "▣ Cubeta",
         "tool_picker": "⌖ Gotero", "tool_replace": "↹ Reemplazar", "tool_line": "／ Línea",
         "tool_rect": "▭ Rectángulo", "mirror": "🪞 Modo Espejo",
@@ -172,6 +191,12 @@ I18N = {
         "zoom_in_tip": "Zoom in (Ctrl++)", "zoom_out_tip": "Zoom out (Ctrl+-)",
         "fit_tip": "Fit to window (Ctrl+0)",
         "tools_group": "Tools",
+        "brushes_group": "Brushes",
+        "brush_shape": "Shape:", "brush_size": "Size:", "brush_strength": "Strength:",
+        "brush_dot": "• Dot", "brush_square": "▦ Square", "brush_circle": "● Circle",
+        "brush_spray": "✳ Spray", "brush_soft": "◌ Soft",
+        "variation": "Tone variation (noise)",
+        "variation_tip": "Each painted pixel gets a slightly different brightness. 0 = flat color.",
         "tool_pencil": "✎ Pencil", "tool_eraser": "⌫ Eraser", "tool_bucket": "▣ Fill",
         "tool_picker": "⌖ Picker", "tool_replace": "↹ Replace", "tool_line": "／ Line",
         "tool_rect": "▭ Rectangle", "mirror": "🪞 Mirror Mode",
@@ -1113,6 +1138,7 @@ class SkinEditor(QMainWindow):
         self.redo_stack = []
         self._stroke_before = None
         self._i18n = []
+        self._retr_hooks = []
         self.dirty = False            # hay cambios sin guardar en un archivo
         self._clean_image = None      # última versión guardada/abierta (para saber si hay cambios)
         self.autosave_timer = QTimer(self)
@@ -1145,9 +1171,15 @@ class SkinEditor(QMainWindow):
         self._i18n.append((setter, key))
         setter(key() if callable(key) else T(key))
 
+    def refresh_brush_texts(self):
+        for i in range(self.brush_combo.count()):
+            self.brush_combo.setItemText(i, T(self.brush_combo.itemData(i)))
+
     def retranslate(self):
         for setter, key in self._i18n:
             setter(key() if callable(key) else T(key))
+        for fn in self._retr_hooks:
+            fn()
         self.coord_label.setText("")
 
     def on_language_changed(self, index):
@@ -1248,6 +1280,40 @@ class SkinEditor(QMainWindow):
         tools_layout.addWidget(self.mirror_check, (len(TOOL_ORDER) + 1) // 2, 0, 1, 2)
         left_layout.addWidget(tools_group)
 
+        # --- pinceles ---
+        brushes_group = QGroupBox()
+        self.bind(brushes_group.setTitle, "brushes_group")
+        brushes_layout = QGridLayout(brushes_group)
+        shape_lbl = QLabel(); self.bind(shape_lbl.setText, "brush_shape")
+        brushes_layout.addWidget(shape_lbl, 0, 0)
+        self.brush_combo = QComboBox()
+        for key in ("brush_dot", "brush_square", "brush_circle", "brush_spray", "brush_soft"):
+            self.brush_combo.addItem(key, key)   # data = clave de i18n
+        self._retr_hooks.append(self.refresh_brush_texts)
+        self.refresh_brush_texts()
+        brushes_layout.addWidget(self.brush_combo, 0, 1)
+        size_lbl = QLabel(); self.bind(size_lbl.setText, "brush_size")
+        brushes_layout.addWidget(size_lbl, 1, 0)
+        self.brush_size = QSlider(Qt.Orientation.Horizontal)
+        self.brush_size.setRange(1, 8)
+        self.brush_size.setValue(1)
+        self.brush_size_value = QLabel("1")
+        self.brush_size_value.setMinimumWidth(20)
+        self.brush_size.valueChanged.connect(lambda v: self.brush_size_value.setText(str(v)))
+        brushes_layout.addWidget(self.brush_size, 1, 1)
+        brushes_layout.addWidget(self.brush_size_value, 1, 2)
+        strength_lbl = QLabel(); self.bind(strength_lbl.setText, "brush_strength")
+        brushes_layout.addWidget(strength_lbl, 2, 0)
+        self.brush_strength = QSlider(Qt.Orientation.Horizontal)
+        self.brush_strength.setRange(5, 100)
+        self.brush_strength.setValue(100)
+        self.brush_strength_value = QLabel("100%")
+        self.brush_strength_value.setMinimumWidth(38)
+        self.brush_strength.valueChanged.connect(lambda v: self.brush_strength_value.setText(f"{v}%"))
+        brushes_layout.addWidget(self.brush_strength, 2, 1)
+        brushes_layout.addWidget(self.brush_strength_value, 2, 2)
+        left_layout.addWidget(brushes_group)
+
         color_group = QGroupBox()
         self.bind(color_group.setTitle, "color_group")
         color_layout = QVBoxLayout(color_group)
@@ -1278,6 +1344,22 @@ class SkinEditor(QMainWindow):
         alpha_row.addWidget(self.alpha_slider)
         alpha_row.addWidget(self.alpha_value)
         color_layout.addLayout(alpha_row)
+
+        var_lbl = QLabel(); self.bind(var_lbl.setText, "variation")
+        self.bind(var_lbl.setToolTip, "variation_tip")
+        color_layout.addWidget(var_lbl)
+        var_row = QHBoxLayout()
+        self.var_slider = QSlider(Qt.Orientation.Horizontal)
+        self.var_slider.setRange(0, 50)
+        self.var_slider.setValue(0)
+        self.bind(self.var_slider.setToolTip, "variation_tip")
+        self.var_value = QLabel("0%")
+        self.var_value.setMinimumWidth(40)
+        self.var_value.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter)
+        self.var_slider.valueChanged.connect(lambda v: self.var_value.setText(f"{v}%"))
+        var_row.addWidget(self.var_slider)
+        var_row.addWidget(self.var_value)
+        color_layout.addLayout(var_row)
         left_layout.addWidget(color_group)
 
         model_group = QGroupBox()
@@ -1581,6 +1663,42 @@ class SkinEditor(QMainWindow):
         self.act_undo.setEnabled(bool(self.undo_stack))
         self.act_redo.setEnabled(bool(self.redo_stack))
 
+    def paint_color(self):
+        c = QColor(self.color)
+        c.setAlpha(self.alpha_slider.value())
+        return vary_color(c, self.var_slider.value())
+
+    def paint_brush(self, cx, cy, is_erase):
+        shape = self.brush_combo.currentData()
+        size = self.brush_size.value()
+        strength = self.brush_strength.value() / 100.0
+        R = size - 1
+        base = self.paint_color()
+        for dy in range(-R, R + 1):
+            for dx in range(-R, R + 1):
+                if shape == "brush_circle" and dx*dx + dy*dy > R*R + R:
+                    continue
+                if shape == "brush_spray" and random.random() > 0.35 * strength:
+                    continue
+                px, py = cx + dx, cy + dy
+                if not (0 <= px < SIZE and 0 <= py < SIZE):
+                    continue
+                info = FACE_AT[py][px]
+                if info and not self.active_zones.get(get_zone(info[0]), True):
+                    continue
+                if is_erase:
+                    self.skin.image.setPixelColor(px, py, Qt.GlobalColor.transparent)
+                elif shape == "brush_soft":
+                    old = self.skin.image.pixelColor(px, py)
+                    a = strength
+                    c = QColor(int(old.red()*(1-a) + base.red()*a),
+                               int(old.green()*(1-a) + base.green()*a),
+                               int(old.blue()*(1-a) + base.blue()*a),
+                               int(old.alpha()*(1-a) + base.alpha()*a))
+                    self.skin.image.setPixelColor(px, py, c)
+                else:
+                    self.skin.image.setPixelColor(px, py, base)
+
     def draw_pixel(self, x, y, is_erase):
         if not (0 <= x < SIZE and 0 <= y < SIZE): return
         info = FACE_AT[y][x]
@@ -1603,12 +1721,7 @@ class SkinEditor(QMainWindow):
             if mx: pixels_to_draw.append(mx)
             
         for px, py in pixels_to_draw:
-            if is_erase or self.tool == "eraser":
-                self.skin.image.setPixelColor(px, py, Qt.GlobalColor.transparent)
-            else:
-                c = QColor(self.color)
-                c.setAlpha(self.alpha_slider.value())
-                self.skin.image.setPixelColor(px, py, c)
+            self.paint_brush(px, py, is_erase or self.tool == "eraser")
         self.viewer.update()
 
     def flood_fill(self, x, y, is_erase):
@@ -1863,6 +1976,10 @@ class SkinEditor(QMainWindow):
                 "alpha": self.alpha_slider.value(),
                 "tool": self.tool,
                 "mirror": self.mirror_check.isChecked(),
+                "brush": self.brush_combo.currentData(),
+                "brush_size": self.brush_size.value(),
+                "brush_strength": self.brush_strength.value(),
+                "variation": self.var_slider.value(),
             }
             with open(tmp_meta, "w", encoding="utf-8") as fh:
                 json.dump(data, fh)
@@ -1910,6 +2027,14 @@ class SkinEditor(QMainWindow):
         tool = data.get("tool")
         if tool in self.tool_buttons:
             self.set_tool(tool)
+        brush = data.get("brush")
+        if brush:
+            i = self.brush_combo.findData(brush)
+            if i >= 0:
+                self.brush_combo.setCurrentIndex(i)
+        self.brush_size.setValue(int(data.get("brush_size", 1)))
+        self.brush_strength.setValue(int(data.get("brush_strength", 100)))
+        self.var_slider.setValue(int(data.get("variation", 0)))
 
         self.dirty = True                    # sigue sin guardar: se conserva la recuperación
         self.canvas.update()
